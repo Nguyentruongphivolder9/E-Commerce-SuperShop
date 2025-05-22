@@ -8,12 +8,15 @@ jobs:
   app-sync:
     if: github.ref == 'refs/heads/app'
     runs-on: ubuntu-latest
+    permissions: 
+        contents: write
     steps:
       - name: Checkout main
         uses: actions/checkout@v4
         with:
           ref: main
           path: main
+          token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: Checkout app branch
@@ -45,19 +48,23 @@ jobs:
           git config --local user.name "GitHub Actions"
           git add .
           if ! git diff-index --quiet HEAD --; then
-            git commit -m "Auto-sync app from app branch"
-            git push
+            git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+            git commit -m "Auto-sync app"
+            git push origin main
           fi
 
   api-sync:
     if: github.ref == 'refs/heads/api'
     runs-on: ubuntu-latest
+    permissions: 
+        contents: write
     steps:
       - name: Checkout main
         uses: actions/checkout@v4
         with:
           ref: main
           path: main
+          token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: Checkout api branch
@@ -89,19 +96,23 @@ jobs:
           git config --local user.name "GitHub Actions"
           git add .
           if ! git diff-index --quiet HEAD --; then
-            git commit -m "Auto-sync api from api branch"
-            git push
+            git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+            git commit -m "Auto-sync api"
+            git push origin main
           fi
 
   web-sync:
     if: github.ref == 'refs/heads/web'
     runs-on: ubuntu-latest
+    permissions: 
+        contents: write
     steps:
       - name: Checkout main
         uses: actions/checkout@v4
         with:
           ref: main
           path: main
+          token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: Checkout web branch
@@ -133,6 +144,7 @@ jobs:
           git config --local user.name "GitHub Actions"
           git add .
           if ! git diff-index --quiet HEAD --; then
-            git commit -m "Auto-sync web from web branch"
-            git push
+            git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+            git commit -m "Auto-sync web"
+            git push origin main
           fi
