@@ -24,7 +24,7 @@ jobs:
 
       - name: Clean other
         run: |
-          cd source
+          cd app
           rm -rf api web .github 
           git add . && git commit -m "Clean branch" || echo "No cleanup needed"
           git push
@@ -65,7 +65,7 @@ jobs:
 
       - name: Clean other
         run: |
-          cd source
+          cd api
           rm -rf app web .github 
           git add . && git commit -m "Clean branch" || echo "No cleanup needed"
           git push
@@ -106,7 +106,7 @@ jobs:
 
       - name: Clean other
         run: |
-          cd source
+          cd web
           rm -rf api app .github 
           git add . && git commit -m "Clean branch" || echo "No cleanup needed"
           git push
