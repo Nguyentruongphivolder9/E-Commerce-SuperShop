@@ -20,13 +20,16 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: app
-          path: source
+          path: app
 
       - name: Clean other
         run: |
           cd app
-          rm -rf api web .github 
-          git add . && git commit -m "Clean branch" || echo "No cleanup needed"
+          rm -rf api web .github
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add .
+          git commit -m "Clean branch" || echo "No changes"
           git push
 
       - name: Sync app folder
@@ -61,13 +64,16 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: api
-          path: source
+          path: api
 
       - name: Clean other
         run: |
           cd api
-          rm -rf app web .github 
-          git add . && git commit -m "Clean branch" || echo "No cleanup needed"
+          rm -rf app web .github
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add .
+          git commit -m "Clean branch" || echo "No changes"
           git push
 
       - name: Sync api folder
@@ -102,13 +108,16 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: web
-          path: source
+          path: web
 
       - name: Clean other
         run: |
           cd web
-          rm -rf api app .github 
-          git add . && git commit -m "Clean branch" || echo "No cleanup needed"
+          rm -rf api app .github
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add .
+          git commit -m "Clean branch" || echo "No changes"
           git push
 
       - name: Sync web folder
