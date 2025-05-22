@@ -1,0 +1,86 @@
+########################### web ###########################
+### VS Code ###
+**/.vscode/*
+!**/.vscode/extensions.json  # Đảm bảo chỉ giữ lại extensions.json
+
+# Logs
+**/*.log
+**/logs
+**/npm-debug.log*
+**/yarn-*.log*
+**/pnpm-debug.log*
+**/lerna-debug.log*
+
+# Build & Dependencies
+**/node_modules
+**/dist*
+**/stats.html
+
+# Environment
+**/*.local
+**/*.env
+
+# Editors/IDEs
+**/.idea
+**/.DS_Store
+**/*.suo
+**/*.ntvs*
+**/*.njsproj
+**/*.sln
+**/*.sw?
+
+# Yarn/PNP
+**/*.yarnrc.yml
+**/.pnp.*
+**/.yarn/*
+!**/.yarn/patches     # Fix: Đưa negation xuống dưới rule cha
+!**/.yarn/plugins
+!**/.yarn/releases
+!**/.yarn/sdks
+!**/.yarn/versions
+**/.yarn/install-state.gz
+
+########################### app ###########################
+# Build Artifacts
+**/build/
+**/app.*.symbols
+**/app.*.map.json
+
+# Platform Specific
+**/android/debug
+**/android/profile
+**/android/release
+
+# Flutter/Dart
+**/doc/api/
+**/ios/Flutter/.last_build_id
+**/.dart_tool/
+**/.flutter-plugins*
+**/.pub*
+
+# Language Specific
+**/*.class
+**/*.pyc
+**/*.swp
+
+# Version Control
+**/.svn/
+**/migrate_working_dir/
+
+########################### api ###########################
+# Java/Maven
+**/target/
+**/.mvn/wrapper/maven-wrapper.jar
+
+# Spring
+**/.apt_generated
+**/.classpath
+**/.springBeans
+**/.sts4-cache
+
+# NetBeans
+**/nbproject/private/
+**/nbbuild/
+**/nbdist/
+**/.nb-gradle/
+
