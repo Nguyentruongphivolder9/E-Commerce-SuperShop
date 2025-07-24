@@ -5,43 +5,51 @@ on:
     branches: [app, api, web]
 
 jobs:
-  app-sync:
-    if: github.ref == 'refs/heads/app'
+  sync:
     runs-on: ubuntu-latest
     permissions: 
-        contents: write
+      contents: write
     steps:
       - name: Checkout main
         uses: actions/checkout@v4
         with:
           ref: main
-          path: main
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
-      - name: Checkout app branch
+      - name: Checkout current branch
         uses: actions/checkout@v4
         with:
-          ref: app
-          path: app
+          ref: ${{ github.ref }}
+          path: current
 
-      - name: Clean other
+      - name: Clean other folders
         run: |
-          cd app
-          rm -rf api web .github
+          cd current
+          # Xóa thư mục không liên quan đến nhánh hiện tại
+          if [[ "${GITHUB_REF##*/}" == "app" ]]; then
+            rm -rf api web
+          elif [[ "${GITHUB_REF##*/}" == "api" ]]; then
+            rm -rf app web
+          elif [[ "${GITHUB_REF##*/}" == "web" ]]; then
+            rm -rf app api
+          fi
+
+          # Cấu hình thông tin commit
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git add .
           git commit -m "Clean branch" || echo "No changes"
           git push
 
-      - name: Sync app folder
+      - name: Sync current folder
         run: |
+          TARGET_DIR="main/${GITHUB_REF##*/}"
           rsync -av --delete --exclude='.github' \
-            "source/app/" \
-            "main/app/"
+            "current/" \
+            "$TARGET_DIR/"
 
-      - name: Commit changes
+      - name: Commit changes to main
         run: |
           cd main
           git config --local user.email "actions@github.com"
@@ -49,102 +57,7 @@ jobs:
           git add .
           if ! git diff-index --quiet HEAD --; then
             git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-            git commit -m "Auto-sync app"
+            git commit -m "Auto-sync ${GITHUB_REF##*/}"
             git push origin main
           fi
 
-  api-sync:
-    if: github.ref == 'refs/heads/api'
-    runs-on: ubuntu-latest
-    permissions: 
-        contents: write
-    steps:
-      - name: Checkout main
-        uses: actions/checkout@v4
-        with:
-          ref: main
-          path: main
-          token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0
-
-      - name: Checkout api branch
-        uses: actions/checkout@v4
-        with:
-          ref: api
-          path: api
-
-      - name: Clean other
-        run: |
-          cd api
-          rm -rf app web .github
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          git add .
-          git commit -m "Clean branch" || echo "No changes"
-          git push
-
-      - name: Sync api folder
-        run: |
-          rsync -av --delete --exclude='.github' \
-            "source/api/" \
-            "main/api/"
-
-      - name: Commit changes
-        run: |
-          cd main
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          git add .
-          if ! git diff-index --quiet HEAD --; then
-            git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-            git commit -m "Auto-sync api"
-            git push origin main
-          fi
-
-  web-sync:
-    if: github.ref == 'refs/heads/web'
-    runs-on: ubuntu-latest
-    permissions: 
-        contents: write
-    steps:
-      - name: Checkout main
-        uses: actions/checkout@v4
-        with:
-          ref: main
-          path: main
-          token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0
-
-      - name: Checkout web branch
-        uses: actions/checkout@v4
-        with:
-          ref: web
-          path: web
-
-      - name: Clean other
-        run: |
-          cd web
-          rm -rf api app .github
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          git add .
-          git commit -m "Clean branch" || echo "No changes"
-          git push
-
-      - name: Sync web folder
-        run: |
-          rsync -av --delete --exclude='.github' \
-            "source/web/" \
-            "main/web/"
-
-      - name: Commit changes
-        run: |
-          cd main
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          git add .
-          if ! git diff-index --quiet HEAD --; then
-            git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-            git commit -m "Auto-sync web"
-            git push origin main
-          fi
