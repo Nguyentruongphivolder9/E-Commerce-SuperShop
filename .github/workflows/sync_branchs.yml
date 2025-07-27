@@ -45,6 +45,9 @@ jobs:
       - name: Sync current folder
         run: |
           TARGET_DIR="main/${GITHUB_REF##*/}"
+          echo "Target Directory: $TARGET_DIR"
+          # tạo thư mục nếu nó không tồn tại
+          mkdir -p "$TARGET_DIR" 
           rsync -av --delete --exclude='.github' \
             "current/" \
             "$TARGET_DIR/"
